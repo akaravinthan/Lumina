@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freedom Fighter Profile Template</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Using the same stylesheet as the main site -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Specific styles to make the profile look good on its own separate page */
+        body {
+            padding-top: 80px;
+            /* Space for the header */
+        }
+
+        .standalone-profile-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            min-height: 80vh;
+        }
+
+        .detail-screen-static {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+            transform: none;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Standard Header -->
+    <header class="site-header">
+        <div class="logo">
+            <h1 style="margin:0; font-size: 1.25rem; font-weight: 800;">Logo</h1>
+        </div>
+        <nav class="main-nav">
+            <a href="index.html">Home</a>
+            <a href="index.html#leaders-section">Leaders</a>
+            <a href="index.html#about-section">About Us</a>
+            <a href="index.html#contact-section">Content Us</a>
+        </nav>
+    </header>
+
+    <main class="standalone-profile-container">
+        <!-- Separate Profile View -->
+        <section class="screen detail-screen-static">
+            <div class="detail-content">
+
+                <!-- Left Image Side -->
+                <div class="detail-left">
+                    <div class="large-avatar-wrapper">
+                        <!-- Replace src with the profile's image path -->
+                        <img src="./images/thevar.jpg" alt="Profile Image"
+                            onerror="this.src='https://placehold.co/400x400/e0e0e0/gray?text=Image+Needed'">
+                    </div>
+                </div>
+
+                <!-- Right Info Side -->
+                <div class="detail-right">
+                    <h2 class="detail-name">Leader Name</h2>
+                    <h4 class="detail-popular">Popular Name: Known Name</h4>
+                    <div class="detail-meta">
+                        <p><strong>Born:</strong><br>Date of Birth</p>
+                        <p><strong>Died:</strong><br>Date of Death</p>
+                    </div>
+
+                    <div class="detail-description">
+                        <h3 style="margin-bottom: 0.5rem; color: var(--accent);">Description</h3>
+                        <p class="detail-role" style="margin-bottom: 2rem; color: #ccc;">
+                            This is where the detailed role or historical context of the freedom fighter goes. It
+                            provides a comprehensive overview of their contributions and significance.
+                        </p>
+                    </div>
+
+                    <h3 style="margin-bottom: 0.5rem; color: var(--accent);">Key Points</h3>
+                    <ul class="detail-list">
+                        <li>Key point 1 about the leader's life and achievements.</li>
+                        <li>Key point 2 regarding their battle or movement.</li>
+                        <li>Key point 3 explaining their legacy and impact.</li>
+                        <li>Key point 4, another notable fact.</li>
+                        <li>Key point 5 to sum up their story.</li>
+                    </ul>
+
+                    <div class="action-buttons" style="margin-top: 3rem;">
+                        <a href="index.html#leaders-section" class="btn back-btn"
+                            style="margin:0; box-shadow:none; padding: 0.8rem 2rem; background: var(--btn-dark); color:white; border:none; text-decoration:none;">←
+                            Back</a>
+                        <a href="https://youtube.com" target="_blank" class="btn outline-light"
+                            style="text-decoration:none; display:inline-flex; align-items:center;">▶ Video</a>
+                        <button class="btn outline-light">Tamil</button>
+                        <!-- In a static page, this could link to a separate quiz page via href="quiz.html?id=xxx" -->
+                        <button class="btn primary"
+                            onclick="alert('Quiz functionality requires the main app script.')">Start Quiz →</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- You can link a separate JS file here if you want independent logic -->
+</body>
+
+</html>

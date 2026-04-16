@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero's - Historical Educational Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Added FontAwesome for exact replica icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="logo">
+            <h1 style="margin:0; font-size: 1.25rem; font-weight: 800;">Logo</h1>
+        </div>
+        <nav class="main-nav" id="main-nav">
+            <a href="javascript:void(0)" onclick="goHome('home-section')">Home</a>
+            <a href="javascript:void(0)" onclick="goHome('leaders-section')">Leaders</a>
+            <a href="javascript:void(0)" onclick="goHome('about-section')">About Us</a>
+            <!-- Used exactly "Content Us" to strictly match typography in your image -->
+            <a href="javascript:void(0)" onclick="goHome('contact-section')">Content Us</a>
+            <!-- Admin Button -->
+            <button class="nav-admin-btn" onclick="openAdminModal()">Admin Login</button>
+        </nav>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" onclick="toggleMobileMenu()">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </header>
+
+    <!-- The Scrollable Landing Page -->
+    <div id="landing-page">
+        <!-- Intro Section -->
+        <section id="home-section" class="intro-section">
+            <!-- Floating decorative particles -->
+            <div class="floating-particles">
+                <span class="particle" style="left:5%; animation-delay:0s;">✦</span>
+                <span class="particle" style="left:15%; animation-delay:1.2s;">⟡</span>
+                <span class="particle" style="left:25%; animation-delay:0.5s;">✧</span>
+                <span class="particle" style="left:40%; animation-delay:2s;">⊹</span>
+                <span class="particle" style="left:55%; animation-delay:0.8s;">✦</span>
+                <span class="particle" style="left:70%; animation-delay:1.5s;">⟡</span>
+                <span class="particle" style="left:80%; animation-delay:0.3s;">✧</span>
+                <span class="particle" style="left:90%; animation-delay:1.8s;">⊹</span>
+            </div>
+
+            <h1 class="main-title">The courage and sacrifice of India's<br>freedom leaders inspire young minds.</h1>
+            <p class="sub-title">India's freedom heroes' excellence and skill teach us bravery and help us shape our
+                history.<br>The amazing freedom leaders of India teach us to help others, and never give up.</p>
+            <button class="btn black-btn"
+                onclick="document.getElementById('leaders-section').scrollIntoView({behavior: 'smooth'})">Let's
+                Start →</button>
+        </section>
+
+        <!-- Leaders Section -->
+        <section id="leaders-section">
+            <div class="glass-container">
+                <div class="hero-grid" id="hero-grid">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- About Us Section -->
+        <section id="about-section">
+            <div class="neu-card">
+                <h2>About Us</h2>
+                <p>Welcome to "Unsung Hero's," a website dedicated to teaching children about India's brave freedom
+                    leaders.<br><br>Our mission is to make history fun, engaging, and easy to understand for young
+                    minds. Through colorful stories, illustrations, and interactive content, kids can learn about the
+                    courage, sacrifice, and inspiring journeys of heroes like Mahatma Gandhi, Rani Lakshmibai, and many
+                    more.<br><br>We believe every child should grow up knowing the values of bravery, equality, and
+                    leadership, and our website provides a safe, creative space to explore these stories.</p>
+                <h3 style="margin-top: 3rem; margin-bottom: 1rem; font-size: 1.25rem;">Social With Us</h3>
+                <!-- Real Vector Icons perfectly matching image -->
+                <div class="social-icons">
+                    <i class="fa-brands fa-instagram"></i>
+                    <i class="fa-brands fa-facebook"></i>
+                    <i class="fa-brands fa-youtube"></i>
+                    <i class="fa-brands fa-telegram"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Us Section -->
+        <section id="contact-section" style="margin-bottom: 5rem;">
+            <div class="neu-card">
+                <h2>Contact Us</h2>
+                <!-- Real Vector Icons perfectly matching image -->
+                <ul class="contact-list" style="list-style:none; padding:0; margin-top:2rem;">
+                    <li><span class="icon"><i class="fa-regular fa-envelope" style="color: #e57373;"></i></span>
+                        jmconsultancyservice@gmail.com
+                    </li>
+                    <li><span class="icon"><i class="fa-solid fa-map-location-dot" style="color: #64b5f6;"></i></span>
+                        <div>Flat no. 10, Andocity,<br>OldNagore Road,<br>opposite to Collector office<br>South
+                            Palpannaichery,<br>Nagapattinam – 611003
+                    </li>
+                    <li><span class="icon"><i class="fa-solid fa-phone" style="color: #111;"></i></span> +9363000426,
+                        +9342000724
+
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modals / SPA views (Hidden by default) -->
+    <main class="app-container">
+
+        <section id="detail-screen" class="screen hidden">
+            <div class="detail-content" id="detail-content"></div>
+        </section>
+
+        <section id="quiz-screen" class="screen hidden">
+            <div class="quiz-header">
+                <button class="back-btn" onclick="backToDetail()">← Exit Quiz</button>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="quiz-progress"></div>
+                </div>
+            </div>
+            <div class="quiz-card-container">
+                <div class="quiz-card" id="quiz-card"></div>
+            </div>
+            <div class="quiz-controls">
+                <button id="prev-btn" class="btn outline-light hidden" style="border-color:black; color:black;"
+                    onclick="prevQuestion()">Previous</button>
+                <button id="next-btn" class="btn primary" onclick="nextQuestion()">Next</button>
+            </div>
+        </section>
+
+        <section id="reward-screen" class="screen hidden">
+            <div class="reward-container">
+                <h2 class="reward-title">Excellent Job!</h2>
+                <p style="font-size:1.5rem; color:var(--text-secondary);">You have unlocked a reward for your bravery.
+                </p>
+                <div class="prize-anim-container" id="prize-anim-container" onclick="openGift()">
+                    <div class="gift-box" id="gift-box">🎁</div>
+                    <div class="reward-prize" id="reward-prize">🧸</div>
+                </div>
+                <h3 class="prize-text hidden" id="prize-text"
+                    style="color:var(--btn-dark); font-size:2rem; margin-top:1rem;">You got a Teddy Bear!</h3>
+                <br>
+                <button class="btn black-btn mt-4" onclick="goHome()">Play Again</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" class="modal-overlay hidden"
+        style="z-index: 20000; align-items: center; justify-content: center; display: none;">
+        <div class="modal-content"
+            style="max-width: 400px; text-align: center; padding: 2.5rem; border-radius: 12px; position:relative;">
+            <span class="close-modal" onclick="closeAdminModal()"
+                style="position:absolute; right:15px; top:10px; font-size:1.5rem; cursor:pointer;">&times;</span>
+            <h2 style="color:#0b3d4f; margin-bottom: 0.5rem;">Admin Console</h2>
+            <p style="color:#666; margin-bottom: 1.5rem; font-size: 0.9rem;">Verify your identity to manage Unsung
+                Heroes</p>
+
+            <button class="btn" onclick="handleGoogleSignInForm()"
+                style="width: 100%; background: white; color: #444; border: 1px solid #ccc; font-weight: bold; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                    style="width: 20px; height: 20px;">
+                Continue with Google
+            </button>
+
+            <p style="color:#999; font-size: 0.8rem; margin-bottom: 1rem;">or use email credentials</p>
+
+            <form id="admin-login-form" onsubmit="handleEmailSignInForm(event)">
+                <div style="text-align: left; margin-bottom: 1rem;">
+                    <label style="font-size: 0.8rem; font-weight: bold; color: #555;">Admin Email</label>
+                    <input type="email" id="admin-email" placeholder="akaravinth74@gmail.com"
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-top: 5px; box-sizing: border-box;"
+                        required>
+                </div>
+                <div style="text-align: left; margin-bottom: 1.5rem;">
+                    <label style="font-size: 0.8rem; font-weight: bold; color: #555;">Password</label>
+                    <input type="password" id="admin-password" placeholder="••••••"
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-top: 5px; box-sizing: border-box;"
+                        required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%; background: #0b3d4f; color: white;">Sign
+                    In</button>
+            </form>
+
+            <p id="admin-error-msg" style="color: red; font-size: 0.8rem; margin-top: 10px; display: none;"></p>
+        </div>
+    </div>
+
+    <!-- Admin login modal script -->
+    <script>
+        function openAdminModal() {
+            const modal = document.getElementById('admin-login-modal');
+            modal.style.display = 'flex';
+            modal.classList.remove('hidden');
+        }
+
+        function closeAdminModal() {
+            const modal = document.getElementById('admin-login-modal');
+            modal.style.display = 'none';
+            modal.classList.add('hidden');
+        }
+
+        async function handleGoogleSignInForm() {
+            const errMsg = document.getElementById('admin-error-msg');
+            errMsg.style.display = 'none';
+
+            if (window.location.protocol === 'file:') {
+                errMsg.style.display = 'block';
+                errMsg.innerHTML = "Google Sign-in requires a local web server (http://). Please use Live Server in VS Code.<br><br>Or use Email/Password sign-in below.";
+                return;
+            }
+
+            try {
+                const { error } = await signInWithGoogle();
+                if (error) {
+                    errMsg.style.display = 'block';
+                    errMsg.textContent = error.message;
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function handleEmailSignInForm(e) {
+            e.preventDefault();
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-password').value;
+            const errMsg = document.getElementById('admin-error-msg');
+            errMsg.style.display = 'none';
+
+            try {
+                const { data, error } = await loginAdmin(email, password);
+                if (error) throw error;
+                // Successfully logged in
+                window.location.href = 'admin.html';
+            } catch (error) {
+                errMsg.style.display = 'block';
+                errMsg.textContent = "Login failed: " + error.message;
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

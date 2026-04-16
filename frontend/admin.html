@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unsung Hero's Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background: #f0f2f5; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .admin-page-container { min-height: 100vh; padding: 2rem 5%; display: block; }
+        .dashboard-card { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 2.5rem; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+        }
+        .stats-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .stat-item { background:#f8f9fa; padding:2rem; border-radius:10px; border-left: 5px solid #3498db; }
+        .stat-item.green { border-left-color: #2ecc71; }
+        .stat-item.purple { border-left-color: #9b59b6; }
+        .stat-item h4 { font-size:2.8rem; margin: 0; color:#2c3e50; }
+        .stat-item p { font-weight:600; color:#7f8c8d; margin-top: 0.5rem; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+        th { padding: 1rem; border-bottom: 2px solid #eee; text-align: left; color: #555; }
+        td { padding: 1rem; border-bottom: 1px solid #eee; vertical-align: middle; }
+        .hero-mini-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
+        
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .admin-title { font-size: 2rem; color: #0b3d4f; font-weight: 800; }
+
+    </style>
+</head>
+<body>
+    <!-- Login removed based on user request -->
+
+    <div class="admin-page-container" id="dashboard-main">
+        <header class="admin-header">
+            <h1 class="admin-title">Admin Dashboard</h1>
+            <div>
+                <button class="btn" onclick="window.location.href='index.html'" style="background:#555; color:white; margin-right: 10px;">Back to Website</button>
+                <button class="btn" onclick="adminLogout()" style="background:#e74c3c; color:white;">Logout</button>
+            </div>
+        </header>
+
+        <main class="dashboard-card">
+            <h3 id="admin-welcome-text">Welcome back, Administrator</h3>
+            <p style="color: #666;">Manage your platform's historical profiles and educational content here.</p>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h4 id="admin-total-count">0</h4>
+                    <p>Total Profiles</p>
+                </div>
+                <div class="stat-item green">
+                    <h4 id="admin-active-count">0</h4>
+                    <p>Active Profiles</p>
+                </div>
+                <div class="stat-item purple">
+                    <h4 id="admin-quiz-count">0</h4>
+                    <p>Quiz Questions</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem; display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="font-size:1.6rem;">Registered Heroes</h3>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn" onclick="window.uploadInitialDataToSupabase()" style="background:#3498db; color:white; font-weight:bold;">🔄 Sync All to Database</button>
+                    <button class="btn" onclick="openProfileModal()" style="background:#2ecc71; color:white; font-weight:bold;">+ Add New Hero</button>
+                </div>
+            </div>
+            
+            <div style="overflow-x:auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Popular Name</th>
+                            <th style="text-align:right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-table-body"></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- The same modal structure as requested -->
+    <div id="profile-modal" class="modal-overlay hidden" style="z-index: 10000;">
+        <div class="modal-content" style="max-width: 800px; text-align: left; padding: 2.5rem; max-height: 90vh; overflow-y: auto; margin: 2rem auto;">
+            <span class="close-modal" onclick="closeProfileModal()">&times;</span>
+            <h2 id="profile-modal-title" style="margin-bottom: 2rem; color:#0b3d4f;">Add Hero Profile</h2>
+            
+            <form id="profile-form" onsubmit="saveProfile(event)">
+                <input type="hidden" id="pm-index" value="-1">
+                
+                <div style="background:#f9f9f9; padding:1.5rem; border-radius:8px; margin-bottom:1.5rem;">
+                    <h4 style="margin-bottom:1rem; border-bottom:1px solid #ddd; padding-bottom:0.5rem; color:#0b3d4f;">English Details</h4>
+                    <div style="margin-bottom: 1.2rem;">
+                        <label style="font-weight:600; display:block; margin-bottom:0.5rem;">Hero ID (e.g. kavimani)</label>
+                        <input type="text" id="pm-id" style="width: 100%; box-sizing: border-box; padding: 0.8rem; border:1px solid #ddd; border-radius:6px;" required>
+                    </div>
+                    <div style="grid-template-columns: 1fr 1fr; display:grid; gap: 1rem;">
+                        <div style="margin-bottom: 1.2rem;">
+                            <label style="font-weight:600; display:block; margin-bottom:0.5rem;">Full Name (English)</label>
+                            <input type="text" id="pm-name" style="width: 100%; box-sizing: border-box; padding: 0.8rem; border:1px solid #ddd; border-radius:6px;" required>
+                        </div>
+                        <div style="margin-bottom: 1.2rem;">
+                            <label style="font-weight:600; display:block; margin-bottom:0.5rem;">Popular Name (English)</label>
+                            <input type="text" id="pm-popular" style="width: 100%; box-sizing: border-box; padding: 0.8rem; border:1px solid #ddd; border-radius:6px;" required>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1.2rem;">
+                        <label style="font-weight:600; display:block; margin-bottom:0.5rem;">Hero Image</label>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <input type="file" id="pm-image-file" accept="image/*" onchange="handleImageUpload(event)" style="flex:1;">
+                            <span style="color:#999;">OR</span>
+                            <input type="text" id="pm-image-url" placeholder="URL" style="flex:2; box-sizing: border-box; padding: 0.8rem; border:1px solid #ddd; border-radius:6px;">
+                        </div>
+                        <div id="image-preview-container" style="margin-top:10px; display:none;">
+                            <img id="pm-image-preview" src="" style="max-height:100px; border-radius:8px; border:1px solid #ddd;">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1.2rem;">
+                        <label style="font-weight:600; display:block; margin-bottom:0.5rem;">Video Link</label>
+                        <input type="text" id="pm-video" style="width: 100%; box-sizing: border-box; padding: 0.8rem; border:1px solid #ddd; border-radius:6px;">
+                    </div>
+                    <div style="grid-template-columns: 1fr 1fr; display:grid; gap: 1rem;">
+                        <div style="margin-bottom: 1.2rem;">
+                            <label style="font-weight:600; display:block; margin-bottom:0.5rem;">Born</label>
+                            <input type="text" id="pm-born" style="width: 100%; box-sizing: border-box; padding: 0.8rem; border:1px solid #ddd; border-radius:6px;">
+                        </div>
+                        <div style="margin-bottom: 1.2rem;">
+                            <label style="font-weight:600; display:block; margin-bottom:0.5rem;">Died</label>
+                            <input type="text" id="pm-died" style="width: 100%; box-sizing: border-box; padding: 0.8rem; border:1px solid #ddd; border-radius:6px;">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1.2rem;">
+                        <label style="font-weight:600; display:block; margin-bottom:0.5rem;">Role/Short Title (English)</label>
+                        <input type="text" id="pm-role" style="width: 100%; box-sizing: border-box; padding: 0.8rem; border:1px solid #ddd; border-radius:6px;">
+                    </div>
+                    <div style="margin-bottom: 1.2rem;">
+                        <label style="font-weight:600; display:block; margin-bottom:0.5rem;">Detailed Description (Points - one per line)</label>
+                        <textarea id="pm-points" rows="4" style="width: 100%; box-sizing: border-box; padding: 0.8rem; border:1px solid #ddd; border-radius:6px;" placeholder="Heroic action 1&#10;Heroic action 2"></textarea>
+                    </div>
+                </div>
+
+                <div style="background:#fff3e0; padding:1.5rem; border-radius:8px; margin-bottom:1.5rem; border:1px solid #ffe0b2;">
+                    <h4 style="margin-bottom:1rem; border-bottom:1px solid #ffcc80; padding-bottom:0.5rem; color:#e65100;">Tamil Details (தமிழ்)</h4>
+                    <div style="grid-template-columns: 1fr 1fr; display:grid; gap: 1rem;">
+                        <div style="margin-bottom: 1.2rem;">
+                            <label style="font-weight:600; display:block; margin-bottom:0.5rem;">Full Name (Ta)</label>
+                            <input type="text" id="pm-ta-name" style="width: 100%; box-sizing: border-box; padding: 0.8rem; border:1px solid #ddd; border-radius:6px;">
+                        </div>
+                        <div style="margin-bottom: 1.2rem;">
+                            <label style="font-weight:600; display:block; margin-bottom:0.5rem;">Popular Name (Ta)</label>
+                            <input type="text" id="pm-ta-popular" style="width: 100%; box-sizing: border-box; padding: 0.8rem; border:1px solid #ddd; border-radius:6px;">
+                        </div>
+                    </div>
+                    <div style="grid-template-columns: 1fr 1fr; display:grid; gap: 1rem;">
+                        <div style="margin-bottom: 1.2rem;">
+                            <label style="font-weight:600; display:block; margin-bottom:0.5rem;">Born (Ta)</label>
+                            <input type="text" id="pm-ta-born" style="width: 100%; box-sizing: border-box; padding: 0.8rem; border:1px solid #ddd; border-radius:6px;">
+                        </div>
+                        <div style="margin-bottom: 1.2rem;">
+                            <label style="font-weight:600; display:block; margin-bottom:0.5rem;">Died (Ta)</label>
+                            <input type="text" id="pm-ta-died" style="width: 100%; box-sizing: border-box; padding: 0.8rem; border:1px solid #ddd; border-radius:6px;">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1.2rem;">
+                        <label style="font-weight:600; display:block; margin-bottom:0.5rem;">Role (Ta)</label>
+                        <input type="text" id="pm-ta-role" style="width: 100%; box-sizing: border-box; padding: 0.8rem; border:1px solid #ddd; border-radius:6px;">
+                    </div>
+                    <div style="margin-bottom: 1.2rem;">
+                        <label style="font-weight:600; display:block; margin-bottom:0.5rem;">Detailed Description points (Tamil - One per line)</label>
+                        <textarea id="pm-ta-points" rows="4" style="width: 100%; box-sizing: border-box; padding: 0.8rem; border:1px solid #ddd; border-radius:6px;"></textarea>
+                    </div>
+                </div>
+
+                <div style="background:#e3f2fd; padding:1.5rem; border-radius:8px; margin-bottom:1.5rem; border:1px solid #bbdefb;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                        <h4 style="margin:0; color:#0d47a1;">Quiz Configuration & Questions</h4>
+                        <button type="button" onclick="addQuizQuestionUI()" class="btn" style="background:#0d47a1; color:white; padding:5px 15px; font-size:0.8rem;">+ Add Question</button>
+                    </div>
+                    
+                    <div id="quiz-questions-container"></div>
+                </div>
+
+                <div style="display:flex; gap:10px; margin-top:2rem;">
+                    <button type="button" onclick="closeProfileModal()" class="btn" style="flex:1; background:#eee;">Cancel</button>
+                    <button type="submit" class="btn" style="flex:2; background:#0b3d4f; color:white;">Save All Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Verify session before showing dashboard
+            const session = await getSession();
+            if (!session) {
+                console.warn('No active session found. Redirecting to home...');
+                window.location.href = 'index.html';
+                return;
+            }
+            showDashboard();
+            
+            // Listen for auth state changes
+            supabase.auth.onAuthStateChange((event, session) => {
+                if (event === 'SIGNED_OUT') {
+                    window.location.href = 'index.html';
+                }
+            });
+        });
+
+        function showDashboard() {
+            console.log("Showing Dashboard UI...");
+            
+            // Dashboard should be visible by default via CSS now
+            // Just sync data
+            if (typeof updateStats === 'function') updateStats();
+            
+            // Start sync if not already handled
+            if (typeof syncHeroesFromDB === 'function') {
+                console.log("Triggering Hero Sync...");
+                syncHeroesFromDB();
+            }
+        }
+
+        // Core Admin Functions
+        function renderAdminTable() {
+            const tableBody = document.getElementById('admin-table-body');
+            if (!tableBody) return;
+            
+            tableBody.innerHTML = '';
+            
+            if (typeof heroesData === 'undefined' || heroesData.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 2rem; color: #999;">No heroes found. Click "Sync" or "Add New".</td></tr>';
+                return;
+            }
+
+            heroesData.forEach((hero, index) => {
+                const tr = document.createElement('tr');
+                tr.style.cursor = 'pointer';
+                tr.onclick = (e) => {
+                    // Don't trigger if a button was clicked
+                    if (e.target.closest('button')) return;
+                    editHero(index);
+                };
+                
+                tr.innerHTML = `
+                    <td><img src="${hero.image}" class="hero-mini-img" onerror="this.src='https://placehold.co/50x50/e0e0e0/gray?text=N/A'"></td>
+                    <td style="font-weight:600;">
+                        <div style="display:flex; flex-direction:column;">
+                            <span>${hero.name}</span>
+                            <a href="index.html#${hero.id || hero.slug}" target="_blank" style="font-size:0.7rem; color:#3498db; text-decoration:none;">View on Site ↗</a>
+                        </div>
+                    </td>
+                    <td style="color:#666;">${hero.popular || '-'}</td>
+                    <td style="text-align:right;">
+                        <button onclick="editHero(${index})" class="btn" style="background:#3498db; color:white; padding: 5px 12px; font-size: 0.8rem; margin-right: 5px;">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button onclick="deleteHero(${index})" class="btn" style="background:#e74c3c; color:white; padding: 5px 12px; font-size: 0.8rem;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        function openProfileModal(index = -1) {
+            const modal = document.getElementById('profile-modal');
+            const form = document.getElementById('profile-form');
+            const title = document.getElementById('profile-modal-title');
+            const quizContainer = document.getElementById('quiz-questions-container');
+            
+            form.reset();
+            quizContainer.innerHTML = '';
+            document.getElementById('image-preview-container').style.display = 'none';
+            document.getElementById('pm-index').value = index;
+
+            if (index >= 0) {
+                const hero = heroesData[index];
+                title.innerText = `Edit: ${hero.name}`;
+                
+                // Fill basics
+                document.getElementById('pm-id').value = hero.id || hero.slug;
+                document.getElementById('pm-id').disabled = true; // Don't allow ID change for existing
+                document.getElementById('pm-name').value = hero.name;
+                document.getElementById('pm-popular').value = hero.popular || '';
+                document.getElementById('pm-image-url').value = hero.image || '';
+                document.getElementById('pm-video').value = hero.videoLink || '';
+                document.getElementById('pm-born').value = hero.born || '';
+                document.getElementById('pm-died').value = hero.died || '';
+                document.getElementById('pm-role').value = hero.role || '';
+                document.getElementById('pm-points').value = (hero.points || []).join('\n');
+
+                if (hero.image) {
+                    document.getElementById('pm-image-preview').src = hero.image;
+                    document.getElementById('image-preview-container').style.display = 'block';
+                }
+
+                // Fill Tamil
+                if (hero.ta) {
+                    document.getElementById('pm-ta-name').value = hero.ta.name || '';
+                    document.getElementById('pm-ta-popular').value = hero.ta.popular || '';
+                    document.getElementById('pm-ta-born').value = hero.ta.born || '';
+                    document.getElementById('pm-ta-died').value = hero.ta.died || '';
+                    document.getElementById('pm-ta-role').value = hero.ta.role || '';
+                    document.getElementById('pm-ta-points').value = (hero.ta.points || []).join('\n');
+                }
+
+                // Fill Quiz
+
+                if (hero.quiz && hero.quiz.length > 0) {
+                    hero.quiz.forEach((q, qidx) => {
+                        const taQ = (hero.ta && hero.ta.quiz) ? hero.ta.quiz[qidx] : null;
+                        addQuizQuestionUI(q, taQ);
+                    });
+                } else {
+                    addQuizQuestionUI(); // Add at least one empty
+                }
+            } else {
+                title.innerText = 'Add New Hero Profile';
+                document.getElementById('pm-id').disabled = false;
+                addQuizQuestionUI(); // Add one empty
+            }
+
+            modal.classList.remove('hidden');
+            modal.style.display = 'block';
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profile-modal').classList.add('hidden');
+            document.getElementById('profile-modal').style.display = 'none';
+        }
+
+        async function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const preview = document.getElementById('pm-image-preview');
+            const container = document.getElementById('image-preview-container');
+            
+            // Local preview
+            preview.src = URL.createObjectURL(file);
+            container.style.display = 'block';
+
+            // Automatic upload to Supabase Storage
+            const statusLabel = document.createElement('span');
+            statusLabel.innerText = " Uploading...";
+            statusLabel.style.color = "#3498db";
+            e.target.parentNode.appendChild(statusLabel);
+
+            try {
+                const publicUrl = await uploadHeroImage(file, `${Date.now()}_${file.name}`);
+                if (publicUrl) {
+                    document.getElementById('pm-image-url').value = publicUrl;
+                    statusLabel.innerText = " ✅ Uploaded";
+                    statusLabel.style.color = "#2ecc71";
+                } else {
+                    statusLabel.innerText = " ❌ Upload failed";
+                    statusLabel.style.color = "#e74c3c";
+                }
+            } catch (err) {
+                console.error(err);
+                statusLabel.innerText = " ❌ Error";
+            }
+        }
+
+        function addQuizQuestionUI(engData = null, taData = null) {
+            const container = document.getElementById('quiz-questions-container');
+            const div = document.createElement('div');
+            div.className = 'quiz-question-edit';
+            div.style.background = 'white';
+            div.style.padding = '1.2rem';
+            div.style.borderRadius = '10px';
+            div.style.marginBottom = '1.5rem';
+            div.style.border = '1px solid #ddd';
+            div.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)';
+
+            const engQuestion = engData ? engData.question : '';
+            const taQuestion = taData ? taData.question : '';
+            const engOptions = engData ? engData.options : ['', '', '', ''];
+            const taOptions = taData ? taData.options : ['', '', '', ''];
+            const answer = engData ? engData.answer : 0;
+            
+            const uniqueId = Date.now() + Math.random();
+
+            div.innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1rem;">
+                    <div>
+                        <label style="font-size: 0.8rem; font-weight: bold; color: #555;">Question (English)</label>
+                        <input type="text" class="qq-title-en" value="${engQuestion}" placeholder="Enter English question" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; margin-top: 5px;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.8rem; font-weight: bold; color: #e65100;">Question (Tamil)</label>
+                        <input type="text" class="qq-title-ta" value="${taQuestion}" placeholder="கேள்வியை உள்ளிடவும்" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; margin-top: 5px;">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div>
+                        <label style="font-size: 0.75rem; font-weight: bold; color: #888; display: block; margin-bottom: 10px;">Options (English)</label>
+                        ${[0,1,2,3].map(i => `
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <input type="radio" name="ans_${uniqueId}" ${answer === i ? 'checked' : ''} value="${i}" style="width: 18px; height: 18px; cursor: pointer;">
+                                <input type="text" class="qq-opt-en" value="${engOptions[i]}" placeholder="Option ${i+1}" style="flex: 1; padding: 8px; border: 1px solid #eee; border-radius: 4px; font-size: 0.9rem;">
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div>
+                        <label style="font-size: 0.75rem; font-weight: bold; color: #888; display: block; margin-bottom: 10px;">Options (Tamil)</label>
+                        ${[0,1,2,3].map(i => `
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <div style="width: 18px;"></div> <!-- Spacer matching radio button width -->
+                                <input type="text" class="qq-opt-ta" value="${taOptions[i]}" placeholder="விருப்பம் ${i+1}" style="flex: 1; padding: 8px; border: 1px solid #eee; border-radius: 4px; font-size: 0.9rem;">
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 10px; border-top: 1px dashed #eee;">
+                    <span style="font-size: 0.8rem; color: #888;"><i class="fas fa-info-circle"></i> Mark the correct answer using the radio buttons</span>
+                    <button type="button" onclick="this.closest('.quiz-question-edit').remove()" style="color: #e74c3c; background: none; border: none; cursor: pointer; font-size: 0.85rem; font-weight: 600;">
+                        <i class="fas fa-trash-alt"></i> Remove
+                    </button>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        async function saveProfile(e) {
+            e.preventDefault();
+            const index = parseInt(document.getElementById('pm-index').value);
+            const id = document.getElementById('pm-id').value;
+            
+            // Build the hero object
+            const hero = {
+                id: id,
+                slug: id,
+                name: document.getElementById('pm-name').value,
+                popular: document.getElementById('pm-popular').value,
+                image: document.getElementById('pm-image-url').value,
+                videoLink: document.getElementById('pm-video').value,
+                born: document.getElementById('pm-born').value,
+                died: document.getElementById('pm-died').value,
+                role: document.getElementById('pm-role').value,
+                points: document.getElementById('pm-points').value.split('\n').filter(p => p.trim()),
+                quiz: [],
+                ta: {
+                    name: document.getElementById('pm-ta-name').value,
+                    popular: document.getElementById('pm-ta-popular').value,
+                    born: document.getElementById('pm-ta-born').value,
+                    died: document.getElementById('pm-ta-died').value,
+                    role: document.getElementById('pm-ta-role').value,
+                    points: document.getElementById('pm-ta-points').value.split('\n').filter(p => p.trim()),
+                    quiz: [] // Currently sync quiz across languages
+                }
+            };
+
+            // Process Quiz
+            const qDivs = document.querySelectorAll('.quiz-question-edit');
+            qDivs.forEach(div => {
+                const qTextEn = div.querySelector('.qq-title-en').value;
+                const qTextTa = div.querySelector('.qq-title-ta').value;
+                
+                if (!qTextEn.trim() && !qTextTa.trim()) return;
+
+                const optsEn = Array.from(div.querySelectorAll('.qq-opt-en')).map(i => i.value);
+                const optsTa = Array.from(div.querySelectorAll('.qq-opt-ta')).map(i => i.value);
+                const ans = Array.from(div.querySelectorAll('input[type="radio"]')).findIndex(r => r.checked);
+                
+                const finalAns = ans >= 0 ? ans : 0;
+                
+                hero.quiz.push({ 
+                    question: qTextEn, 
+                    options: optsEn, 
+                    answer: finalAns 
+                });
+                
+                hero.ta.quiz.push({ 
+                    question: qTextTa || qTextEn, // Fallback to English if Tamil is empty
+                    options: optsTa[0] ? optsTa : optsEn, // Fallback to English options if Tamil is empty
+                    answer: finalAns 
+                });
+            });
+
+            // Save to Supabase
+            const { error } = await supabase
+                .from('heroes')
+                .upsert({ 
+                    slug: hero.id,
+                    name: hero.name,
+                    popular: hero.popular,
+                    image: hero.image,
+                    video_link: hero.videoLink,
+                    born: hero.born,
+                    died: hero.died,
+                    role: hero.role,
+                    points: hero.points,
+                    quiz: hero.quiz,
+                    ta: hero.ta,
+                    is_completed: false
+                }, { onConflict: 'slug' });
+
+            if (error) {
+                alert("Error saving: " + error.message);
+            } else {
+                alert("Profile Saved Successfully!");
+                closeProfileModal();
+                syncHeroesFromDB(); // Refresh Everything
+            }
+        }
+
+        window.editHero = function(index) {
+            openProfileModal(index);
+        };
+
+        window.deleteHero = async function(index) {
+            const hero = heroesData[index];
+            if (!confirm(`Are you sure you want to delete ${hero.name}?`)) return;
+
+            const { error } = await supabase
+                .from('heroes')
+                .delete()
+                .eq('slug', hero.id || hero.slug);
+
+            if (error) {
+                alert("Delete failed: " + error.message);
+            } else {
+                alert("Hero deleted.");
+                syncHeroesFromDB();
+            }
+        }
+
+        function updateStats() {
+            if (!document.getElementById('admin-total-count')) return;
+            if (typeof heroesData !== 'undefined' && heroesData.length > 0) {
+                document.getElementById('admin-total-count').innerText = heroesData.length;
+                document.getElementById('admin-active-count').innerText = heroesData.length;
+                let totalQ = 0;
+                heroesData.forEach(h => { if(h.quiz) totalQ += h.quiz.length; });
+                document.getElementById('admin-quiz-count').innerText = totalQ;
+            }
+        }
+
+        window.adminLogout = async function() {
+            await logoutAdmin();
+            window.location.reload();
+        };
+
+        // Override alert to also refresh stats
+        const nativeAlert = window.alert;
+        window.alert = function(msg) {
+            nativeAlert(msg);
+            if (msg.includes("Saved")) updateStats();
+        };
+    </script>
+</body>
+</html>

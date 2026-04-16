@@ -1,0 +1,12 @@
+{
+  "name": "unsungs-heroes",
+  "version": "1.0.0",
+  "description": "Historical Educational Platform",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve frontend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
