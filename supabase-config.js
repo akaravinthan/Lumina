@@ -42,7 +42,7 @@ async function signInWithGoogle(customRedirectUrl) {
         provider: 'google',
         options: {
             // Use custom redirect URL if provided, otherwise fallback to auto-detection
-            redirectTo: customRedirectUrl || window.location.origin + window.location.pathname.replace(/\/?[^\/]*$/, '/admin.html'),
+            redirectTo: customRedirectUrl || (window.location.origin + '/admin.html'),
             queryParams: {
                 prompt: 'select_account'
             }
