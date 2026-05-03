@@ -1575,28 +1575,7 @@ function loadLocalProgress() {
     }
 }
 
-// Data Migration Helper (Run once to fill DB)
-window.uploadInitialDataToSupabase = async function() {
-    if (!confirm("This will upload all current local heroes to Supabase. Continue?")) return;
-    
-    for (const hero of allBaseHeroes) {
-        // Sanitize data for DB (remove runtime IDs if any, ensure slug matches)
-        const { id, isCompleted, userAnswers, videoLink, ...heroData } = hero;
-        const { error } = await supabase
-            .from('heroes')
-            .upsert({ 
-                slug: id,
-                is_completed: isCompleted || false,
-                user_answers: userAnswers || [],
-                video_link: videoLink || '',
-                ...heroData 
-            }, { onConflict: 'slug' });
-            
-        if (error) console.error(`Error uploading ${hero.name}:`, error);
-    }
-    alert("Migration Complete!");
-    syncHeroesFromDB();
-};
+
 
 window.saveHeroesData = async function () {
     // Local backup
