@@ -392,26 +392,26 @@ h4 {
         padding: 0 1rem;
     }
     .large-avatar-wrapper {
-        width: 180px;
-        height: 180px;
+        width: 150px;
+        height: 150px;
     }
     .detail-right {
-        padding: 1.5rem;
+        padding: 1rem;
         text-align: center;
     }
     .detail-name {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
     }
     .points-list {
         text-align: left;
     }
     .profile-model-container {
-        margin-top: 60px;
-        padding: 1rem;
+        margin-top: 50px;
+        padding: 0.8rem;
     }
     .profile-model-top {
         flex-direction: column;
-        gap: 1.5rem;
+        gap: 1.2rem;
         align-items: center;
     }
     .profile-model-left {
@@ -419,8 +419,8 @@ h4 {
         width: 100%;
     }
     .profile-model-img-wrapper {
-        width: 220px;
-        height: 220px;
+        width: 140px;
+        height: 140px;
     }
     .profile-model-right {
         padding: 0;
@@ -434,110 +434,118 @@ h4 {
     }
     .hero-grid {
         grid-template-columns: 1fr;
-        gap: 1rem;
+        gap: 0.8rem;
     }
     .hero-avatar {
-        padding: 1.5rem 1rem;
+        padding: 1rem 0.8rem;
     }
     .avatar-img-wrapper {
-        width: 100px;
-        height: 100px;
+        width: 80px;
+        height: 80px;
     }
     .hero-name {
-        font-size: 0.95rem;
+        font-size: 0.85rem;
     }
     .main-title {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
     }
     .sub-title {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
+        margin-top: 0.5rem;
     }
     .black-btn {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.75rem;
     }
     .reward-container {
-        padding: 1.5rem 0.8rem;
+        padding: 1rem 0.5rem;
     }
     .reward-title {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
     }
     .quiz-card {
-        padding: 1.2rem 0.8rem;
+        padding: 1rem 0.6rem;
     }
     .quiz-card h3 {
-        font-size: 0.95rem;
-        margin-bottom: 1.2rem;
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
         line-height: 1.3;
     }
     .quiz-radio-label {
-        padding: 0.6rem;
-        font-size: 0.8rem;
-        gap: 0.6rem;
+        padding: 0.5rem;
+        font-size: 0.75rem;
+        gap: 0.5rem;
     }
     .quiz-radio-label input[type="radio"] {
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 14px;
     }
     .prize-anim-container {
-        width: 120px;
-        height: 120px;
+        width: 100px;
+        height: 100px;
     }
     .prize-anim-container .gift-box,
     .prize-anim-container .reward-prize {
-        font-size: 3.5rem;
+        font-size: 3rem;
     }
     .detail-name {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         text-align: center;
     }
     .detail-popular {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         text-align: center;
     }
     .detail-role, .detail-list li {
-        font-size: 0.8rem;
-        line-height: 1.4;
+        font-size: 0.75rem;
+        line-height: 1.3;
     }
     .detail-meta {
-        gap: 0.8rem;
-        padding: 0.8rem;
+        gap: 0.6rem;
+        padding: 0.6rem;
         flex-wrap: wrap;
         justify-content: center;
     }
     .detail-meta p {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
     }
     .back-btn {
-        padding: 0.35rem 0.7rem;
-        font-size: 0.7rem;
-        margin-bottom: 0.8rem;
+        padding: 0.3rem 0.6rem;
+        font-size: 0.65rem;
+        margin-bottom: 0.6rem;
     }
     .profile-model-container {
-        margin-top: 30px;
-        padding: 0.3rem;
+        margin-top: 20px;
+        padding: 0.2rem;
     }
     .profile-model-img-wrapper {
-        width: 150px;
-        height: 150px;
+        width: 120px;
+        height: 120px;
     }
     .profile-model-name-badge {
-        padding: 0.6rem 0.8rem;
-        font-size: 0.8rem;
+        padding: 0.5rem 0.7rem;
+        font-size: 0.75rem;
     }
     .large-avatar-wrapper {
-        width: 130px;
-        height: 130px;
+        width: 100px;
+        height: 100px;
+    }
+    .profile-model-img-wrapper {
+        width: 110px;
+        height: 110px;
     }
     .detail-right {
-        padding: 0.8rem;
+        padding: 0.5rem;
     }
     .quiz-controls {
-        gap: 0.8rem;
-        margin: 1.5rem auto;
+        gap: 0.6rem;
+        margin: 1rem auto;
     }
     .progress-bar {
-        width: 100px;
+        width: 80px;
+    }
+    .quiz-header {
+        margin-bottom: 1rem;
     }
 }
 
