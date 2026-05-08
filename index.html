@@ -197,6 +197,10 @@
             const modal = document.getElementById('admin-login-modal');
             modal.style.display = 'flex';
             modal.classList.remove('hidden');
+            
+            // Close mobile menu if open
+            const nav = document.getElementById('main-nav');
+            if (nav) nav.classList.remove('active');
         }
 
         function closeAdminModal() {
